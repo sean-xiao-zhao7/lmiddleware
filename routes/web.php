@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $user = Auth::user();
+    if ($user->isAdmin()) {
+        echo "ADMIN";
+    }
 });
+
+Route::get('/admin/user/roles', ['middleware' => ['role', 'auth'], function () {
+    return "Role middleware";
+}]);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
